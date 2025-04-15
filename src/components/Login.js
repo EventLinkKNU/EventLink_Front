@@ -1,12 +1,11 @@
-// Login.jsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [userName, setUserName] = useState(null);
 
-  useEffect(() => {
+  const checkLoginStatus = () => {
     fetch("http://localhost:8080/api/user", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -17,8 +16,11 @@ const Login = () => {
         throw new Error("User not logged in");
       })
       .then((data) => setUserName(data.user_nm))
-      .catch(() => setUserName(null));
-  }, []);
+      .catch(() => {
+        setUserName(null);
+        toast.info("로그인 되어 있지 않습니다.");
+      });
+  };
 
   const handleLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
@@ -54,6 +56,8 @@ const Login = () => {
         <div>
           <h2>로그인</h2>
           <button onClick={handleLogin}>Login with Google</button>
+          <br />
+          <button onClick={checkLoginStatus}>로그인 상태 확인</button>
         </div>
       )}
       <ToastContainer
