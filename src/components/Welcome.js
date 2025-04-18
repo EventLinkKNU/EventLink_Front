@@ -59,6 +59,12 @@ const Welcome = () => {
   const goToMyPage = () => {
     navigate("/mypage");
   };
+  const createEvent = () =>{
+    navigate("/event-create");
+  }
+  const getMyEvents = () =>{
+    navigate("/get-myEvents");
+  }
 
   return (
     <div>
@@ -67,6 +73,9 @@ const Welcome = () => {
       <button onClick={handleLogout}>로그아웃</button>
       <button onClick={handleDelete}>탈퇴</button>
       <button onClick={goToMyPage}>마이페이지</button>
+      <button onClick={getMyEvents}>내 이벤트조회</button>
+      <button onClick={createEvent}>이벤트생성</button>
+    
       <ToastContainer
         position="top-center"
         autoClose={1500}
