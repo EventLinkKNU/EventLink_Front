@@ -2,26 +2,33 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Welcome from "./components/Welcome";
 import Login from "./components/Login";
-import MyPage from "./components/Mypage"; // 마이페이지 추가
+import MyPage from "./components/Mypage"; 
 import CreateEvent from "./components/CreateEvent"; 
-import { LoginProvider } from "./contexts/LoginContext"; // LoginContext import
+import { LoginProvider } from "./contexts/LoginContext";
 import MyCreatedEvents from "./components/MyCreatedEvents";
+import Layout from "./components/layout/layout"; 
+import Chat from "./components/Chat"; 
+import Notifications from "./components/Notifications";
+import Main from "./components/Main";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 function App() {
   return (
     <LoginProvider>
-      {" "}
-      {/* LoginProvider로 앱 감싸기 */}
       <Router>
         <div className="App">
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/welcome" element={<Welcome />} />
-            <Route path="/mypage" element={<MyPage />} />{" "}
-            {/* 마이페이지 추가 */}
-            <Route path="/event-create" element={<CreateEvent />} />{" "}
-            <Route path="/get-myEvents" element={<MyCreatedEvents />}/>{" "}
+
+            <Route path="/main" element={<Layout><Main /></Layout>} />
+            <Route path="/welcome" element={<Layout><Welcome /></Layout>} />
+            <Route path="/mypage" element={<Layout><MyPage /></Layout>} />
+            <Route path="/chat" element={<Layout><Chat /></Layout>} />
+            <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
+            <Route path="/event-create" element={<Layout><CreateEvent /></Layout>} />
+            <Route path="/get-myEvents" element={<Layout><MyCreatedEvents /></Layout>} />
           </Routes>
         </div>
       </Router>
