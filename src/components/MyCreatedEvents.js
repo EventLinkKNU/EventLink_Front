@@ -6,7 +6,7 @@ const MyCreatedEvents = () => {
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/v1/events/get-my-events", {
-        withCredentials: true, // JWT 쿠키가 있다면 포함
+        withCredentials: true, 
       })
       .then((res) => {
         setEvents(res.data);
@@ -24,7 +24,7 @@ const MyCreatedEvents = () => {
           withCredentials: true,
         })
         .then(() => {
-          // 성공 시 이벤트 목록에서 삭제
+          
           setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
         })
         .catch((err) => {

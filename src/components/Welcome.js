@@ -65,7 +65,9 @@ const Welcome = () => {
   const getMyEvents = () =>{
     navigate("/get-myEvents");
   }
-
+  const getAllEvents = () =>{
+    navigate("/get_allEvents");
+  }
   return (
     <div>
       <h2>로그인 되신 것을 환영합니다, {userName}님!</h2>
@@ -74,6 +76,7 @@ const Welcome = () => {
       <button onClick={handleDelete}>탈퇴</button>
       <button onClick={goToMyPage}>마이페이지</button>
       <button onClick={getMyEvents}>내 이벤트조회</button>
+      <button onClick={getAllEvents}>모든 이벤트 조회</button>
       <button onClick={createEvent}>이벤트생성</button>
     
       <ToastContainer

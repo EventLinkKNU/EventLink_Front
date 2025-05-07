@@ -10,8 +10,11 @@ import Layout from "./components/layout/layout";
 import Chat from "./components/Chat"; 
 import Notifications from "./components/Notifications";
 import Main from "./components/Main";
+import AllEvents from "./components/AllEvents";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
 
 
 function App() {
@@ -29,6 +32,7 @@ function App() {
             <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
             <Route path="/event-create" element={<Layout><CreateEvent /></Layout>} />
             <Route path="/get-myEvents" element={<Layout><MyCreatedEvents /></Layout>} />
+            <Route path="/get_allEvents" element={<Layout><AllEvents /></Layout>} />
           </Routes>
         </div>
       </Router>
