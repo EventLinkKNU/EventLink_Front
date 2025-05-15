@@ -11,9 +11,9 @@ import Chat from "./components/Chat";
 import Notifications from "./components/Notifications";
 import Main from "./components/Main";
 import AllEvents from "./components/AllEvents";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import MyScrap from "./components/MyScrap";
 
 
 
@@ -27,6 +27,7 @@ function App() {
 
             <Route path="/main" element={<Layout><Main /></Layout>} />
             <Route path="/welcome" element={<Layout><Welcome /></Layout>} />
+            <Route path="/myscrap" element={<Layout><MyScrap /></Layout>} />
             <Route path="/mypage" element={<Layout><MyPage /></Layout>} />
             <Route path="/chat" element={<Layout><Chat /></Layout>} />
             <Route path="/notifications" element={<Layout><Notifications /></Layout>} />

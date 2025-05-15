@@ -1,117 +1,99 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const MyPage = () => {
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    email: "",
-    gender: "",
-    country: "",
-  });
+const Mypage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // 사용자 정보 불러오기
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/user/profile", { withCredentials: true }) // 사용자 정보 가져오는 API 호출
-      .then((res) => {
-        setUserInfo({
-          name: res.data.name || "", // 이름이 없다면 빈 문자열로 초기화
-          email: res.data.email || "", // 이메일이 없다면 빈 문자열로 초기화
-          gender: res.data.gender || "", // 성별이 없다면 빈 문자열로 초기화
-          country: res.data.country || "", // 국가가 없다면 빈 문자열로 초기화
-        });
-      })
-      .catch((err) => {
-        console.error("유저 정보 불러오기 실패", err);
-      });
-  }, []);
+  const queryParams = new URLSearchParams(location.search);
+  const userName = queryParams.get("member_nm");
 
-  // 사용자 정보 수정 (input 값 변경 시 상태 업데이트)
-  const handleChange = (e) => {
-    setUserInfo((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        { withCredentials: true }
+      );
+      toast.success("로그아웃 되었습니다 👋");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      toast.error("로그아웃 실패 😢");
+      console.error(error);
+    }
   };
 
-  // 사용자 정보 수정 제출
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .put(
-        "http://localhost:8080/api/user",
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await axios.delete(
+        "http://localhost:8080/api/user/delete",
         {
-          gender: userInfo.gender,
-          country: userInfo.country,
-        },
-        {
-          withCredentials: true, // ✅ 쿠키 보내기!
+          withCredentials: true,
         }
-      )
-      .then(() => {
-        alert("수정 완료!");
-      })
-      .catch((err) => {
-        console.error("수정 실패", err);
-        alert("수정 실패!");
-      });
+      );
+
+      if (response.status === 200) {
+        toast.success("탈퇴되었습니다. 😢");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        toast.error("탈퇴 실패. 다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.error("탈퇴 실패:", error);
+      toast.error("탈퇴 실패. 다시 시도해 주세요.");
+    }
   };
 
+  const goToMyInfo = () => {
+    navigate("/myinfo");
+  }
+
+  const goToMyScrap = () => {
+    navigate("/myscrap");
+  };
+  const createEvent = () =>{
+    navigate("/event-create");
+  }
+  const getMyEvents = () =>{
+    navigate("/get-myEvents");
+  }
+  const getAllEvents = () =>{
+    navigate("/get_allEvents");
+  }
   return (
-    <div className="mypage-form">
-      <h2>마이페이지</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>이름</label>
-          <input type="text" value={userInfo.name} readOnly />
-          {/* 이름은 수정할 수 없도록 readOnly 처리 */}
-        </div>
-
-        <div>
-          <label>이메일</label>
-          <input type="email" value={userInfo.email} readOnly />
-          {/* 이메일도 수정할 수 없도록 readOnly 처리 */}
-        </div>
-
-        <div>
-          <label>성별</label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="boy"
-              checked={userInfo.gender === "boy"} // 성별이 'boy'일 경우 체크
-              onChange={handleChange} // 변경 시 handleChange 호출
-            />{" "}
-            남자
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="girl"
-              checked={userInfo.gender === "girl"} // 성별이 'girl'일 경우 체크
-              onChange={handleChange} // 변경 시 handleChange 호출
-            />{" "}
-            여자
-          </label>
-        </div>
-
-        <div>
-          <label>국가</label>
-          <input
-            type="text"
-            name="country"
-            value={userInfo.country} // 수정된 국가 값 반영
-            onChange={handleChange} // 입력 시 handleChange 호출
-            placeholder="예: Korea"
-          />
-        </div>
-
-        <button type="submit">정보 수정</button>
-      </form>
+    <div>
+      <br></br>
+      <br></br>
+            <br></br>
+      <h2>로그인 되신 것을 환영합니다, {userName}님!</h2>
+      <p>이제 귀하의 대시보드에 액세스할 수 있습니다.</p>
+      <button onClick={handleLogout}>로그아웃</button>
+      <button onClick={handleDelete}>탈퇴</button>
+      <button onClick={goToMyInfo}>계정 관리</button>
+      <button onClick={goToMyScrap}>스크랩</button>
+      <button onClick={getMyEvents}>내 이벤트조회</button>
+      <button onClick={getAllEvents}>모든 이벤트 조회</button>
+      <button onClick={createEvent}>이벤트생성</button>
+    
+      <ToastContainer
+        position="top-center"
+        autoClose={1500}
+        hideProgressBar={false}
+      />
     </div>
   );
 };
 
-export default MyPage;
+export default Mypage;
