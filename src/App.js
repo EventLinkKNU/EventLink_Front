@@ -14,6 +14,7 @@ import AllEvents from "./components/AllEvents";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MyScrap from "./components/MyScrap";
+import MyInfo from "./components/MyInfo";
 
 
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/welcome" element={<Layout><Welcome /></Layout>} />
             <Route path="/myscrap" element={<Layout><MyScrap /></Layout>} />
             <Route path="/mypage" element={<Layout><MyPage /></Layout>} />
+            <Route path="/myinfo" element={<Layout><MyInfo /></Layout>} />
             <Route path="/chat" element={<Layout><Chat /></Layout>} />
             <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
             <Route path="/event-create" element={<Layout><CreateEvent /></Layout>} />

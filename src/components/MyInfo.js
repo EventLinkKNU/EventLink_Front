@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./MyInfo.css"; 
 
 const MyInfo = () => {
   const [userInfo, setUserInfo] = useState({
@@ -59,7 +60,7 @@ const MyInfo = () => {
 
   return (
     <div className="mypage-form">
-      <h2>마이페이지</h2>
+      <h2>계정 관리</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>이름</label>
@@ -108,7 +109,7 @@ const MyInfo = () => {
           />
         </div>
 
-        <button type="submit">정보 수정</button>
+        <button type="submit">수정 하기</button>
       </form>
     </div>
   );
