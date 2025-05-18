@@ -44,10 +44,17 @@ const MyCreatedEvents = () => {
             <h3>{event.title}</h3>
             <p>작성자: {event.creatorName}</p>
             <p>카테고리 : {event.categoryName}</p>
+            <p>나라 : {event.country}</p>
+            <p>도시 : {event.city}</p>
+            <p>성별 제한 : {event.genderFilter}</p>
+            <p>여행 스타일 : {event.styleFilter}</p>
             <p>내용 : {event.content}</p>
             <p>인원: {event.minParticipants} ~ {event.maxParticipants}</p>
+            <p>현재 참여 인원: {event.currentParticipants}</p>
             <p>시작: {event.startDate}</p>
             <p>마감: {event.closeDate}</p>
+            <p></p>
+            
             <button onClick={() => handleDelete(event.id)}>삭제</button>
           </div>
         ))
