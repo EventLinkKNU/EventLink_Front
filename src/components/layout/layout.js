@@ -12,6 +12,8 @@ const Layout = ({ children }) => {
     const mainStyle = {
         flex: 1,
         padding: "20px",
+        paddingTop: "80px",       // 헤더 공간 확보
+        paddingBottom: "100px",   // 푸터 공간 확보
     };
 
     return (
