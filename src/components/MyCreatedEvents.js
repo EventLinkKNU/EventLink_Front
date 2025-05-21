@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ 추가
+import "./MyCreatedEvents.css"; 
 
 const MyCreatedEvents = () => {
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate(); // ✅ 추가
+
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/v1/events/get-my-events", {
-        withCredentials: true, 
+        withCredentials: true,
       })
       .then((res) => {
         setEvents(res.data);
@@ -24,8 +28,9 @@ const MyCreatedEvents = () => {
           withCredentials: true,
         })
         .then(() => {
-          
-          setEvents((prevEvents) => prevEvents.filter((e) => e.id !== eventId));
+          setEvents((prevEvents) =>
+            prevEvents.filter((e) => e.id !== eventId)
+          );
         })
         .catch((err) => {
           console.error("이벤트 삭제 실패", err);
@@ -33,31 +38,65 @@ const MyCreatedEvents = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
+  const calculateDDay = (startDate) => {
+    const today = new Date();
+    const start = new Date(startDate);
+    const diffTime = start.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) return `D-${diffDays}`;
+    if (diffDays === 0) return "D-DAY";
+    return `D+${Math.abs(diffDays)}`;
+  };
+
+  const handleRowClick = (eventId) => {
+    navigate(`/event-detail/${eventId}`); 
+  };
+
   return (
-    <div>
-      <h2>내가 만든 이벤트</h2>
+    <div className="myscrap-container">
+      <h2 className="myscrap-title">내 이벤트 관리</h2>
       {events.length === 0 ? (
-        <p>이벤트가 없습니다.</p>
+        <p className="myscrap-no-data">이벤트가 없습니다.</p>
       ) : (
-        events.map((event) => (
-          <div key={event.id} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
-            <h3>{event.title}</h3>
-            <p>작성자: {event.creatorName}</p>
-            <p>카테고리 : {event.categoryName}</p>
-            <p>나라 : {event.country}</p>
-            <p>도시 : {event.city}</p>
-            <p>성별 제한 : {event.genderFilter}</p>
-            <p>여행 스타일 : {event.styleFilter}</p>
-            <p>내용 : {event.content}</p>
-            <p>인원: {event.minParticipants} ~ {event.maxParticipants}</p>
-            <p>현재 참여 인원: {event.currentParticipants}</p>
-            <p>시작: {event.startDate}</p>
-            <p>마감: {event.closeDate}</p>
-            <p></p>
-            
-            <button onClick={() => handleDelete(event.id)}>삭제</button>
-          </div>
-        ))
+        <table className="myscrap-table">
+          <thead>
+            <tr>
+              <th>제목</th>
+              <th>국가</th>
+              <th>날짜</th>
+              <th>D-DAY</th>
+              <th>삭제</th>
+            </tr>
+          </thead>
+          <tbody>
+            {events.map((event) => (
+              <tr
+                key={event.id}
+                onClick={() => handleRowClick(event.id)}
+                style={{ cursor: "pointer" }}
+              >
+                <td>{event.title}</td>
+                <td>{event.country}</td>
+                <td>
+                  {formatDate(event.startDate)} ~ {formatDate(event.closeDate)}
+                </td>
+                <td>{calculateDDay(event.startDate)}</td>
+                <td onClick={(e) => e.stopPropagation()}>
+                  <button onClick={() => handleDelete(event.id)}>삭제</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
