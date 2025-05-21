@@ -42,13 +42,13 @@ const EventDetail = () => {
       });
   };
 
-  const updateStatus = (status) => {
+  const updateStatus = (status, username) => {
     axios
       .patch(
-        "http://localhost:8080/event/apply/update-status",
+        "http://localhost:8080/api/v1/events/event/apply/update-status",
         null,
         {
-          params: { eventId: id, status },
+          params: { eventId: id, status, username },
           withCredentials: true,
         }
       )
@@ -93,8 +93,8 @@ const EventDetail = () => {
               <p>🧑 신청자: {p.username}</p>
               <p>📄 신청 내용: {p.content}</p>
               <p>📌 상태: {p.applicationStatus}</p>
-              <button onClick={() => updateStatus("APPROVED")}>승인</button>
-              <button onClick={() => updateStatus("REJECTED")}>거절</button>
+              <button onClick={() => updateStatus("APPROVED", p.username)}>승인</button>
+              <button onClick={() => updateStatus("REJECTED", p.username)}>거절</button>
               <hr />
             </li>
           ))}
