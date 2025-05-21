@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
+import { useNavigate } from "react-router-dom";
 import "./MyCreatedEvents.css"; 
 
 const MyCreatedEvents = () => {
   const [events, setEvents] = useState([]);
-  const navigate = useNavigate(); // ✅ 추가
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     axios
