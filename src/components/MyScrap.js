@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./MyScrap.css";
 
 const MyScrap = () => {
   const [scrapData, setScrapData] = useState([]);
   const [userInfo, setUserInfo] = useState({ name: "", email: "" });
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const calculateDday = (closeDate) => {
     const today = new Date();
@@ -19,7 +21,6 @@ const MyScrap = () => {
     return "마감";
   };
 
-  // ✅ useEffect 바깥으로 이동
   const fetchData = async () => {
     try {
       const userRes = await axios.get("http://localhost:8080/api/user/profile", {
@@ -47,8 +48,8 @@ const MyScrap = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (scrapId) => {
-    console.log("삭제 요청 ID:", scrapId);
+  const handleDelete = async (scrapId, e) => {
+    e.stopPropagation(); 
     if (!scrapId) {
       alert("삭제할 ID가 없습니다.");
       return;
@@ -60,7 +61,6 @@ const MyScrap = () => {
           withCredentials: true,
         });
         alert("삭제 완료");
-
         fetchData();
       } catch (err) {
         console.error("스크랩 삭제 실패:", err);
@@ -69,11 +69,15 @@ const MyScrap = () => {
     }
   };
 
+  const handleRowClick = (eventId) => {
+    navigate(`/event-detail/${eventId}`); // ✅ 상세 페이지 이동
+  };
+
   if (loading) return <div>로딩 중...</div>;
 
   return (
     <div className="myscrap-container">
-      <h2 className="myscrap-title">내 스크랩</h2>
+     <h2 className="myscrap-title">{userInfo.name}님의 스크랩</h2>
       <table className="myscrap-table">
         <thead>
           <tr>
@@ -91,18 +95,21 @@ const MyScrap = () => {
             </tr>
           ) : (
             scrapData.map((scrap) => (
-              <tr key={scrap.scrapId}>
+              <tr
+                key={scrap.scrapId}
+                onClick={() => handleRowClick(scrap.eventId)}
+                style={{ cursor: "pointer" }}
+              >
                 <td>{scrap.eventTitle || "이벤트 없음"}</td>
                 <td>{scrap.categoryName || scrap.eventCreatorName || "정보 없음"}</td>
-               <td>
-                {scrap.eventStartDate && scrap.eventCloseDate
-                  ? `${new Date(scrap.eventStartDate).toLocaleDateString()} ~ ${new Date(scrap.eventCloseDate).toLocaleDateString()}`
-                  : "정보 없음"}
-               </td>
-
-                <td>{scrap.eventStartDate ? calculateDday(scrap.eventStartDate) : "정보 없음"}</td>
                 <td>
-                  <button onClick={() => handleDelete(scrap.scrapId)}>삭제</button>
+                  {scrap.eventStartDate && scrap.eventCloseDate
+                    ? `${new Date(scrap.eventStartDate).toLocaleDateString()} ~ ${new Date(scrap.eventCloseDate).toLocaleDateString()}`
+                    : "정보 없음"}
+                </td>
+                <td>{scrap.eventStartDate ? calculateDday(scrap.eventStartDate) : "정보 없음"}</td>
+                <td onClick={(e) => e.stopPropagation()}>
+                  <button onClick={(e) => handleDelete(scrap.scrapId, e)}>삭제</button>
                 </td>
               </tr>
             ))
