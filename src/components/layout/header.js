@@ -1,7 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+    const [keyword, setKeyword] = useState(""); 
+    const navigate = useNavigate();             
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && keyword.trim()) {
+            navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+        }
+    };
+
     const headerStyle = {
         backgroundColor: "#000",
         height: "60px",
@@ -47,9 +56,20 @@ const Header = () => {
 
     return (
         <header style={headerStyle}>
-            <div style={leftStyle}>
+            {/* <div style={leftStyle}>
                 <Link to="/main" style={titleStyle}>EventLink</Link>
                 <input style={inputStyle} type="text" placeholder="이벤트를 검색해보세요." />
+            </div> */}
+            <div style={leftStyle}>
+                <Link to="/main" style={titleStyle}>EventLink</Link>
+                <input
+                    style={inputStyle}
+                    type="text"
+                    placeholder="이벤트를 검색해보세요."
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
             </div>
             <div style={rightStyle}>
                 <Link to="/chat" style={{ textDecoration: 'none', color: 'inherit' }}>💬</Link>
