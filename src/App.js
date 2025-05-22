@@ -17,6 +17,7 @@ import "slick-carousel/slick/slick-theme.css";
 import MyScrap from "./components/MyScrap";
 import MyInfo from "./components/MyInfo";
 import SearchResult from "./components/SearchResult";
+import SearchPanel from "./components/SearchPanel";
 
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
             <Route path="/get_allEvents" element={<Layout><AllEvents /></Layout>} />
             <Route path="/event-detail/:id" element={<Layout><EventDetail /></Layout>} />
             <Route path="/search" element={<Layout><SearchResult /></Layout>} />
+            <Route path="/search" element={<Layout><SearchPanel /></Layout>} />
+
           </Routes>
         </div>
       </Router>
