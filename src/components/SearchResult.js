@@ -11,15 +11,28 @@ const SearchResult = () => {
   const keyword = decodeURIComponent(query.get("keyword"));
 
   useEffect(() => {
-    if (keyword) {
+    const query = new URLSearchParams(location.search);
+    const keyword = decodeURIComponent(query.get("keyword") || "");
+  
+    if (!keyword || keyword.trim() === "") {
+      // 🔍 전체 이벤트 조회
       axios
-      .get(`http://localhost:8080/api/v1/search?keyword=${encodeURIComponent(keyword)}`, {
-        withCredentials: true, 
-      })        
-      .then((res) => setResults(res.data))
+        .get("http://localhost:8080/api/v1/events/get-all-events", {
+          withCredentials: true,
+        })
+        .then((res) => setResults(res.data))
+        .catch((err) => console.error("전체 이벤트 조회 실패", err));
+    } else {
+      // 🔍 검색어 있을 때만 검색 API 호출
+      axios
+        .get(`http://localhost:8080/api/v1/search?keyword=${encodeURIComponent(keyword)}`, {
+          withCredentials: true,
+        })
+        .then((res) => setResults(res.data))
         .catch((err) => console.error("검색 실패", err));
     }
-  }, [keyword]);
+  }, [location.search]);
+  
 
   return (
     <div style={{ padding: "10px" }}>

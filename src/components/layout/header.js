@@ -6,10 +6,12 @@ const Header = () => {
     const navigate = useNavigate();             
 
     const handleKeyDown = (e) => {
-        if (e.key === "Enter" && keyword.trim()) {
-            navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+        if (e.key === "Enter") {
+          const trimmed = keyword.trim();
+          navigate(`/search?keyword=${encodeURIComponent(trimmed)}`);
         }
-    };
+      };
+      
 
     const headerStyle = {
         backgroundColor: "#000",
