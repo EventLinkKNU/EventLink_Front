@@ -6,6 +6,7 @@ const EventDetail = () => {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [participations, setParticipations] = useState([]);
+  const [isScrapped, setIsScrapped] = useState(false);
   const [scrapMessage, setScrapMessage] = useState("");
 
   useEffect(() => {
@@ -26,20 +27,43 @@ const EventDetail = () => {
       .catch((err) => console.error("신청서 조회 실패", err));
   }, [id]);
 
-  const handleScrap = () => {
-    axios
-      .post("http://localhost:8080/api/scraps", null, {
-        params: { eventId: id },
-        withCredentials: true,
-      })
-      .then((res) => setScrapMessage(res.data))
-      .catch((err) => {
-        if (err.response) {
-          setScrapMessage(err.response.data);
-        } else {
-          setScrapMessage("스크랩 중 오류가 발생했습니다.");
-        }
-      });
+  useEffect(() => {
+  axios
+    .get(`http://localhost:8080/api/scraps/is-scrapped`, {
+      params: { eventId: id },
+      withCredentials: true,
+    })
+    .then((res) => {
+      // console.log("스크랩 상태 API 응답:", res.data); 
+      setIsScrapped(res.data.scrapped); 
+    })
+    .catch((err) => {
+      console.error("스크랩 여부 확인 실패", err);
+    });
+  }, [id]);
+
+const handleScrap = () => {
+  axios
+    .post("http://localhost:8080/api/scraps", null, {
+      params: { eventId: id },
+      withCredentials: true,
+    })
+    .then((res) => {
+      setScrapMessage(res.data);
+      // 응답 메시지에 따라 상태 토글
+      if (res.data.includes("완료되었습니다")) {
+        setIsScrapped(true);
+      } else if (res.data.includes("취소되었습니다")) {
+        setIsScrapped(false);
+      }
+    })
+    .catch((err) => {
+      if (err.response) {
+        setScrapMessage(err.response.data);
+      } else {
+        setScrapMessage("스크랩 중 오류가 발생했습니다.");
+      }
+    });
   };
 
   const updateStatus = (status, username) => {
@@ -79,7 +103,10 @@ const EventDetail = () => {
       <p>시작일: {event.startDate}</p>
       <p>마감일: {event.closeDate}</p>
 
-      <button onClick={handleScrap}>⭐ 스크랩 하기</button>
+      <button onClick={handleScrap}>
+        {isScrapped ? "★ 스크랩됨" : "☆ 스크랩 하기"}
+      </button>
+      
       {scrapMessage && <p>{scrapMessage}</p>}
 
       <hr />
