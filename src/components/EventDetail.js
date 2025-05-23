@@ -6,9 +6,21 @@ const EventDetail = () => {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [participations, setParticipations] = useState([]);
-  const [isScrapped, setIsScrapped] = useState(false);
   const [scrapMessage, setScrapMessage] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [applicationContent, setApplicationContent] = useState("");
 
+  // 현재 로그인한 사용자 정보 요청
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/v1/events/get-current-user", {
+        withCredentials: true,
+      })
+      .then((res) => setCurrentUser(res.data))
+      .catch((err) => console.error("현재 사용자 정보 조회 실패", err));
+  }, []);
+
+  // 이벤트 상세 정보 가져오기
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/v1/events/get-event?eventId=${id}`, {
@@ -18,58 +30,36 @@ const EventDetail = () => {
       .catch((err) => console.error("이벤트 상세 조회 실패", err));
   }, [id]);
 
+  // 내 신청서 조회
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/events/event/apply/get-my-apply?eventId=${id}`, {
+      .get(`http://localhost:8080/api/v1/events/applications/event?eventId=${id}`, {
         withCredentials: true,
       })
       .then((res) => setParticipations(res.data))
       .catch((err) => console.error("신청서 조회 실패", err));
   }, [id]);
 
-  useEffect(() => {
-  axios
-    .get(`http://localhost:8080/api/scraps/is-scrapped`, {
-      params: { eventId: id },
-      withCredentials: true,
-    })
-    .then((res) => {
-      // console.log("스크랩 상태 API 응답:", res.data); 
-      setIsScrapped(res.data.scrapped); 
-    })
-    .catch((err) => {
-      console.error("스크랩 여부 확인 실패", err);
-    });
-  }, [id]);
-
-const handleScrap = () => {
-  axios
-    .post("http://localhost:8080/api/scraps", null, {
-      params: { eventId: id },
-      withCredentials: true,
-    })
-    .then((res) => {
-      setScrapMessage(res.data);
-      // 응답 메시지에 따라 상태 토글
-      if (res.data.includes("완료되었습니다")) {
-        setIsScrapped(true);
-      } else if (res.data.includes("취소되었습니다")) {
-        setIsScrapped(false);
-      }
-    })
-    .catch((err) => {
-      if (err.response) {
-        setScrapMessage(err.response.data);
-      } else {
-        setScrapMessage("스크랩 중 오류가 발생했습니다.");
-      }
-    });
+  const handleScrap = () => {
+    axios
+      .post("http://localhost:8080/api/scraps", null, {
+        params: { eventId: id },
+        withCredentials: true,
+      })
+      .then((res) => setScrapMessage(res.data))
+      .catch((err) => {
+        if (err.response) {
+          setScrapMessage(err.response.data);
+        } else {
+          setScrapMessage("스크랩 중 오류가 발생했습니다.");
+        }
+      });
   };
 
   const updateStatus = (status, username) => {
     axios
       .patch(
-        "http://localhost:8080/api/v1/events/event/apply/update-status",
+        "http://localhost:8080/api/v1/events/applications/event/update-status",
         null,
         {
           params: { eventId: id, status, username },
@@ -78,7 +68,7 @@ const handleScrap = () => {
       )
       .then(() => {
         alert(`신청서가 ${status === "APPROVED" ? "승인" : "거절"}되었습니다.`);
-        window.location.reload(); // 상태 갱신을 위해 새로고침
+        window.location.reload();
       })
       .catch((err) => {
         console.error("상태 업데이트 실패", err);
@@ -86,7 +76,31 @@ const handleScrap = () => {
       });
   };
 
+  const handleApply = () => {
+    axios
+      .post(
+        "http://localhost:8080/api/v1/events/apply",
+        {
+          eventId: id,
+          content: applicationContent,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(() => {
+        alert("신청이 완료되었습니다.");
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error("신청 실패", err);
+        alert("이미 신청한 이벤트입니다.");
+      });
+  };
+
   if (!event) return <p>불러오는 중...</p>;
+
+  const isCreator = currentUser?.username === event.creatorUsername;
 
   return (
     <div>
@@ -103,29 +117,43 @@ const handleScrap = () => {
       <p>시작일: {event.startDate}</p>
       <p>마감일: {event.closeDate}</p>
 
-      <button onClick={handleScrap}>
-        {isScrapped ? "★ 스크랩됨" : "☆ 스크랩 하기"}
-      </button>
-      
+      <button onClick={handleScrap}>⭐ 스크랩 하기</button>
       {scrapMessage && <p>{scrapMessage}</p>}
 
+      {!isCreator && (
+        <div>
+          <h3>📨 이벤트 신청</h3>
+          <textarea
+            placeholder="신청 내용을 입력하세요"
+            value={applicationContent}
+            onChange={(e) => setApplicationContent(e.target.value)}
+            style={{ width: "100%", height: "80px" }}
+          />
+          <button onClick={handleApply}>신청하기</button>
+        </div>
+      )}
+
       <hr />
-      <h3>신청서 목록</h3>
-      {participations.length === 0 ? (
-        <p>신청서가 없습니다.</p>
-      ) : (
-        <ul>
-          {participations.map((p, index) => (
-            <li key={index}>
-              <p>🧑 신청자: {p.username}</p>
-              <p>📄 신청 내용: {p.content}</p>
-              <p>📌 상태: {p.applicationStatus}</p>
-              <button onClick={() => updateStatus("APPROVED", p.username)}>승인</button>
-              <button onClick={() => updateStatus("REJECTED", p.username)}>거절</button>
-              <hr />
-            </li>
-          ))}
-        </ul>
+      {isCreator && (
+        <div>
+          <h3>신청서 목록</h3>
+          {participations.length === 0 ? (
+            <p>신청서가 없습니다.</p>
+          ) : (
+            <ul>
+              {participations.map((p, index) => (
+                <li key={index}>
+                  <p>🧑 신청자: {p.username}</p>
+                  <p>📄 신청 내용: {p.content}</p>
+                  <p>📌 상태: {p.applicationStatus}</p>
+                  <button onClick={() => updateStatus("APPROVED", p.username)}>승인</button>
+                  <button onClick={() => updateStatus("REJECTED", p.username)}>거절</button>
+                  <hr />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
     </div>
   );
