@@ -18,6 +18,8 @@ import MyScrap from "./components/MyScrap";
 import MyInfo from "./components/MyInfo";
 import SearchResult from "./components/SearchResult";
 import SearchPanel from "./components/SearchPanel";
+import MyApplicationEvent from "./components/MyApplicationEvent";
+import MyComplaint from "./components/MyComplaint";
 
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
             <Route path="/myscrap" element={<Layout><MyScrap /></Layout>} />
             <Route path="/mypage" element={<Layout><MyPage /></Layout>} />
             <Route path="/myinfo" element={<Layout><MyInfo /></Layout>} />
+            <Route path="/myapplication" element={<Layout><MyApplicationEvent /></Layout>} />
+            <Route path="/mycomplaint" element={<Layout><MyComplaint /></Layout>} />
             <Route path="/chat" element={<Layout><Chat /></Layout>} />
             <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
             <Route path="/event-create" element={<Layout><CreateEvent /></Layout>} />

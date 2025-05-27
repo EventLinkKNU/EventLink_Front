@@ -1,302 +1,155 @@
+/* 전체 화면 배경과 중앙 정렬 */
 .screen {
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-  }
-  
+  background-color: #f9fafb;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.screen .div {
+  background-color: #ffffff;
+  width: 1200px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.1);
+  padding: 40px 60px 80px;
+  box-sizing: border-box;
+}
+
+/* 배너 슬라이더 */
+.banner-slider {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 0.15);
+  margin-bottom: 50px;
+}
+
+.banner-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.banner-image:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* 전체 이벤트 보기 버튼 */
+.view-all-button-container {
+  position: relative; /* 추가 */
+  text-align: right;
+  margin: 1rem 1.5rem 40px;
+  z-index: 10; /* 필요 시 */
+}
+
+/* 버튼 스타일 */
+.view-all-button {
+  position: relative; /* 추가 */
+  z-index: 20; /* 겹침 방지 */
+  background-color: #0078d4;
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 10px 22px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* float 제거 */
+  margin-bottom: 0; /* 부모 div에서 마진 관리 */
+}
+
+.view-all-button:hover {
+  background-color: #005ea1;
+}
+
+/* 각 이벤트 그룹 컨테이너 */
+.group-2, .group-3, .group-4 {
+  margin-bottom: 70px;
+  position: relative;
+}
+
+/* 그룹 제목 */
+.text-wrapper {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  color: #222222;
+  margin-bottom: 24px;
+  border-left: 6px solid #0078d4;
+  padding-left: 14px;
+  user-select: none;
+}
+
+/* 이벤트 카드 그리드 */
+.event-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* 이벤트 카드 */
+.event-card {
+  background-color: #fefefe;
+  flex: 1 1 calc(20% - 20px);
+  min-width: 210px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  padding: 18px 20px;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.event-card:hover {
+  box-shadow: 0 10px 25px rgb(0 0 0 / 0.15);
+  transform: translateY(-5px);
+}
+
+/* 이벤트 제목 */
+.event-card h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0078d4;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 이벤트 상세 */
+.event-card p {
+  font-size: 14px;
+  color: #555555;
+  margin: 2px 0;
+  user-select: none;
+}
+
+/* 날짜 부분 조금 강조 */
+.event-card p:last-child {
+  color: #888888;
+  font-style: italic;
+}
+
+/* 반응형 약간 보완 */
+@media (max-width: 1280px) {
   .screen .div {
-    background-color: #ffffff;
-    height: 2693px;
-    overflow: hidden;
-    position: relative;
-    width: 1920px;
+    width: 95%;
+    padding: 30px 20px 50px;
   }
-  
-  .screen .rectangle {
-    background-color: #f6f6f6;
-    border-radius: 10px;
-    height: 468px;
-    left: 1664px;
-    position: absolute;
-    top: 193px;
-    width: 574px;
+  .event-card {
+    flex: 1 1 calc(33% - 20px);
   }
-  
-  .screen .rectangle-2 {
-    background-color: #f6f6f6;
-    border-radius: 10px;
-    height: 468px;
-    left: -319px;
-    position: absolute;
-    top: 193px;
-    width: 595px;
+}
+
+@media (max-width: 768px) {
+  .event-card {
+    flex: 1 1 calc(50% - 15px);
   }
-  
-  .screen .rectangle-3 {
-    background-color: #f6f6f6;
-    border-radius: 10px;
-    height: 468px;
-    left: 337px;
-    position: absolute;
-    top: 193px;
-    width: 1213px;
-  }
-  
-  .screen .group {
-    height: 379px;
-    left: 144px;
-    position: absolute;
-    top: 2061px;
-    width: 1634px;
-  }
-  
-  .screen .text-wrapper {
-    color: #000000;
-    font-family: "Noto Sans-SemiBold", Helvetica;
-    font-size: 40px;
-    font-weight: 600;
-    left: 0;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 0;
-  }
-  
-  .screen .rectangle-4 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 0;
-    position: absolute;
-    top: 79px;
-    width: 796px;
-  }
-  
-  .screen .rectangle-5 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 836px;
-    position: absolute;
-    top: 79px;
-    width: 796px;
-  }
-  
-  .screen .group-2 {
-    height: 379px;
-    left: 144px;
-    position: absolute;
-    top: 753px;
-    width: 1634px;
-  }
-  
-  .screen .group-3 {
-    height: 379px;
-    left: 144px;
-    position: absolute;
-    top: 1189px;
-    width: 1634px;
-  }
-  
-  .screen .rectangle-6 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 0;
-    position: absolute;
-    top: 79px;
-    width: 300px;
-  }
-  
-  .screen .rectangle-7 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 333px;
-    position: absolute;
-    top: 79px;
-    width: 300px;
-  }
-  
-  .screen .rectangle-8 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 666px;
-    position: absolute;
-    top: 79px;
-    width: 300px;
-  }
-  
-  .screen .rectangle-9 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 999px;
-    position: absolute;
-    top: 79px;
-    width: 300px;
-  }
-  
-  .screen .rectangle-10 {
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    height: 300px;
-    left: 1332px;
-    position: absolute;
-    top: 79px;
-    width: 300px;
-  }
-  
-  .screen .group-4 {
-    height: 379px;
-    left: 144px;
-    position: absolute;
-    top: 1625px;
-    width: 1634px;
-  }
-  
-  .screen .overlap-group-wrapper {
-    height: 131px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 1924px;
-  }
-  
-  .screen .overlap-group {
-    background-color: #000000;
-    height: 131px;
-    position: relative;
-    width: 1920px;
-  }
-  
-  .screen .text-wrapper-2 {
-    color: #ffffff;
-    font-family: "Noto Sans-SemiBold", Helvetica;
-    font-size: 33px;
-    font-weight: 600;
-    left: 126px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 43px;
-  }
-  
-  .screen .overlap {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0px 0px 8px #0000001a;
-    height: 45px;
-    left: 434px;
-    position: absolute;
-    top: 43px;
-    width: 929px;
-  }
-  
-  .screen .text-wrapper-3 {
-    color: #9f9f9f;
-    font-family: "Noto Sans-Medium", Helvetica;
-    font-size: 14px;
-    font-weight: 500;
-    left: 29px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    text-align: center;
-    top: 13px;
-  }
-  
-  .screen .group-5 {
-    height: 30px;
-    left: 1664px;
-    position: absolute;
-    top: 50px;
-    width: 178px;
-  }
-  
-  .screen .vector {
-    height: 26px;
-    left: 156px;
-    position: absolute;
-    top: 2px;
-    width: 22px;
-  }
-  
-  .screen .img {
-    height: 25px;
-    left: 82px;
-    position: absolute;
-    top: 3px;
-    width: 22px;
-  }
-  
-  .screen .bxs-chat {
-    height: 30px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 30px;
-  }
-  
-  .screen .group-wrapper {
-    background-color: #000000;
-    height: 119px;
-    left: 0;
-    position: absolute;
-    top: 2574px;
-    width: 1920px;
-  }
-  
-  .screen .group-6 {
-    height: 16px;
-    left: 126px;
-    position: relative;
-    top: 51px;
-    width: 719px;
-  }
-  
-  .screen .text {
-    color: #909090;
-    font-family: "Noto Sans-Regular", Helvetica;
-    font-size: 12px;
-    font-weight: 400;
-    left: 122px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 2px;
-    white-space: nowrap;
-    width: 593px;
-  }
-  
-  .screen .text-wrapper-4 {
-    color: #909090;
-    font-family: "Noto Sans-SemiBold", Helvetica;
-    font-size: 15px;
-    font-weight: 600;
-    left: 0;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 0;
-    white-space: nowrap;
-    width: 72px;
-  }
-   
-  .banner-slider {
-    width: 100%;
-    height: 468px;
-    margin-top: 70px;
-    overflow: hidden;
-  }
-  
   .banner-image {
-    width: 100%;
-    height: 468px;
-    object-fit: cover;
-    border-radius: 10px;
+    height: 250px;
   }
-  
+}
