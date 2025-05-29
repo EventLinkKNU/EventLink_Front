@@ -13,9 +13,9 @@ const Main = () => {
   const [foreignEvents, setForeignEvents] = useState([]);
 
   const bannerImages = [
-    "/images/banner1.jpeg",
+    "/images/banner1.png",
     "/images/banner2.png",
-    "/images/banner3.jpeg",
+    "/images/banner3.png",
   ];
 
   const sliderSettings = {
