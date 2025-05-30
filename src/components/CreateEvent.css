@@ -1,0 +1,151 @@
+/* 전체 폼 컨테이너 */
+.event-create-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 각 입력 그룹 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* 라벨 */
+.form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* 기본 입력들 */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+textarea,
+select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* 버튼 그룹 (성별, 스타일) */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* 선택 버튼 기본 */
+.select-button {
+  padding: 8px 16px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* 선택된 상태 */
+.select-button.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* 인원수 슬라이더 */
+.range-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.range-group input[type="range"] {
+  flex-grow: 1;
+}
+
+/* 등록 버튼 */
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+}
+
+/* 모달 팝업 (국가/도시 선택) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  background: none;
+  border: none;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal-grid button {
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 12px;
+  background-color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.modal-grid button:hover {
+  background-color: #eee;
+}
+
+.modal-page-button {
+  margin-top: 20px;
+  padding: 8px 16px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.modal-page-button:hover {
+  background-color: #ddd;
+}
