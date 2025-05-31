@@ -1,6 +1,5 @@
-// src/components/EventDetail.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./EventDetail.css"; // CSS import
 
@@ -11,6 +10,7 @@ const EventDetail = () => {
   const [scrapMessage, setScrapMessage] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [applicationContent, setApplicationContent] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -89,6 +89,31 @@ const EventDetail = () => {
       });
   };
 
+  const handleChat = () => {
+    if (!event?.creatorId || !currentUser) {
+      alert("채팅 대상 정보 또는 사용자 정보가 없습니다.");
+      return;
+    }
+
+    axios
+      .post(
+        `http://localhost:8080/api/v1/chats/create/${currentUser.id}`,
+        { receiveId: event.creatorId },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        const chatRoom = res.data;
+        console.log("채팅방 생성 성공:", chatRoom);
+
+        // ✅ receiverId까지 포함해서 navigate!
+        navigate(`/chatroom/${chatRoom.chatId}/${currentUser.id}/${chatRoom.receiveId}`);
+      })
+      .catch((err) => {
+        console.error("채팅 생성 실패", err);
+        alert("채팅 생성 중 오류가 발생했습니다.");
+      });
+  };
+
   if (!event) return <p>불러오는 중...</p>;
 
   const isCreator = currentUser?.username === event.creatorUsername;
@@ -133,6 +158,25 @@ const EventDetail = () => {
           </p>
         </div>
       </div>
+
+      {/* ✅ 채팅하기 버튼 추가 */}
+      {!isCreator && event.creatorId && (
+        <button
+          onClick={handleChat}
+          className="chat-button"
+          style={{
+            marginTop: "10px",
+            padding: "8px 16px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          💬 채팅하기
+        </button>
+      )}
 
       <h3 className="section-title">상세 정보</h3>
       <p className="category-info">🗂️ 카테고리: {event.categoryName}</p>

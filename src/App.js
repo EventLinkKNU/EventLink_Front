@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Welcome from "./components/Welcome";
 import Login from "./components/Login";
@@ -20,9 +20,19 @@ import SearchResult from "./components/SearchResult";
 import SearchPanel from "./components/SearchPanel";
 import MyApplicationEvent from "./components/MyApplicationEvent";
 import MyComplaint from "./components/MyComplaint";
+import ChatRoom from "./components/ChatRoom";
 
 
 function App() {
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      console.log("✅ Token 저장 (App.js):", token);
+      localStorage.setItem("Authorization", "Bearer " + token);
+    }
+  }, []);
   return (
     <LoginProvider>
       <Router>
@@ -45,6 +55,7 @@ function App() {
             <Route path="/event-detail/:id" element={<Layout><EventDetail /></Layout>} />
             <Route path="/search" element={<Layout><SearchResult /></Layout>} />
             <Route path="/search" element={<Layout><SearchPanel /></Layout>} />
+            <Route path="/chatroom/:chatId/:senderId/:receiverId" element={<Layout><ChatRoom /></Layout>} />
 
           </Routes>
         </div>
