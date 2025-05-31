@@ -1,0 +1,159 @@
+/* src/components/EventDetail.css */
+
+.event-detail-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.event-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.scrap-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.event-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  color: #555;
+}
+
+.gender-filter {
+  background-color: #fff5f5;
+  padding: 6px 14px;
+  border-radius: 12px;
+  color: #888;
+  font-weight: bold;
+  font-size: 15px;
+  border: 1px solid #f0f0f0;
+}
+
+.schedule-box {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.box-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.creator-info {
+  background-color: #fafafa;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #f0f0f0;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+}
+
+.creator-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+.creator-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.creator-meta {
+  font-size: 13px;
+  color: #777;
+}
+
+.style-filter {
+  color: #700;
+}
+
+.category-info {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.event-content {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.application-textarea {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.apply-button {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.participation-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.approve-button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.reject-button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
