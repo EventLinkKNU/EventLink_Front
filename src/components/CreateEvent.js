@@ -320,14 +320,6 @@ const CreateEvent = () => {
                 </div>
 
                 {/* 페이지네이션 */}
-                {countries.length > (countryPage + 1) * ITEMS_PER_PAGE && (
-                  <button
-                    className="modal-page-button"
-                    onClick={() => setCountryPage((prev) => prev + 1)}
-                  >
-                    ▶️ 다음
-                  </button>
-                )}
                 {countryPage > 0 && (
                   <button
                     className="modal-page-button"
@@ -337,6 +329,15 @@ const CreateEvent = () => {
                     ◀️ 이전
                   </button>
                 )}
+                {countries.length > (countryPage + 1) * ITEMS_PER_PAGE && (
+                  <button
+                    className="modal-page-button"
+                    onClick={() => setCountryPage((prev) => prev + 1)}
+                  >
+                    ▶️ 다음
+                  </button>
+                )}
+
               </>
             )}
 
@@ -360,14 +361,6 @@ const CreateEvent = () => {
                 </div>
 
                 {/* 페이지네이션 */}
-                {cities.length > (cityPage + 1) * ITEMS_PER_PAGE && (
-                  <button
-                    className="modal-page-button"
-                    onClick={() => setCityPage((prev) => prev + 1)}
-                  >
-                    ▶️ 다음
-                  </button>
-                )}
                 {cityPage > 0 && (
                   <button
                     className="modal-page-button"
@@ -375,6 +368,15 @@ const CreateEvent = () => {
                     onClick={() => setCityPage((prev) => prev - 1)}
                   >
                     ◀️ 이전
+                  </button>
+                )}
+
+                {cities.length > (cityPage + 1) * ITEMS_PER_PAGE && (
+                  <button
+                    className="modal-page-button"
+                    onClick={() => setCityPage((prev) => prev + 1)}
+                  >
+                    ▶️ 다음
                   </button>
                 )}
               </>

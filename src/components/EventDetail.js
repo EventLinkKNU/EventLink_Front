@@ -1,6 +1,8 @@
+// src/components/EventDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import "./EventDetail.css"; // CSS import
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -10,32 +12,23 @@ const EventDetail = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [applicationContent, setApplicationContent] = useState("");
 
-  // 현재 로그인한 사용자 정보 요청
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/events/get-current-user", {
-        withCredentials: true,
-      })
+      .get("http://localhost:8080/api/v1/events/get-current-user", { withCredentials: true })
       .then((res) => setCurrentUser(res.data))
       .catch((err) => console.error("현재 사용자 정보 조회 실패", err));
   }, []);
 
-  // 이벤트 상세 정보 가져오기
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/events/get-event?eventId=${id}`, {
-        withCredentials: true,
-      })
+      .get(`http://localhost:8080/api/v1/events/get-event?eventId=${id}`, { withCredentials: true })
       .then((res) => setEvent(res.data))
       .catch((err) => console.error("이벤트 상세 조회 실패", err));
   }, [id]);
 
-  // 내 신청서 조회
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/events/applications/event?eventId=${id}`, {
-        withCredentials: true,
-      })
+      .get(`http://localhost:8080/api/v1/events/applications/event?eventId=${id}`, { withCredentials: true })
       .then((res) => setParticipations(res.data))
       .catch((err) => console.error("신청서 조회 실패", err));
   }, [id]);
@@ -84,9 +77,7 @@ const EventDetail = () => {
           eventId: id,
           content: applicationContent,
         },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       )
       .then(() => {
         alert("신청이 완료되었습니다.");
@@ -103,22 +94,49 @@ const EventDetail = () => {
   const isCreator = currentUser?.username === event.creatorUsername;
 
   return (
-    <div>
-      <h2>{event.title}</h2>
-      <p>작성자: {event.creatorName}</p>
-      <p>카테고리: {event.categoryName}</p>
-      <p>나라 : {event.country}</p>
-      <p>도시 : {event.city}</p>
-      <p>성별 제한 : {event.genderFilter}</p>
-      <p>여행 스타일 : {event.styleFilter}</p>
-      <p>내용: {event.content}</p>
-      <p>인원: {event.minParticipants} ~ {event.maxParticipants}</p>
-      <p>현재 참여 인원: {event.currentParticipants}</p>
-      <p>시작일: {event.startDate}</p>
-      <p>마감일: {event.closeDate}</p>
+    <div className="event-detail-container">
+      <h2 className="event-title">{event.title}</h2>
 
-      <button onClick={handleScrap}>⭐ 스크랩 하기</button>
+      <div className="event-header">
+        <button onClick={handleScrap} className="scrap-button" title="스크랩 하기">⭐</button>
+
+        <div className="event-meta">
+          <div className="gender-filter">
+            {event.genderFilter === "MALE"
+              ? "남자만"
+              : event.genderFilter === "FEMALE"
+              ? "여자만"
+              : "성별 무관"}
+          </div>
+          <span>모집인원 ({event.currentParticipants} / {event.maxParticipants})</span>
+        </div>
+      </div>
+
+      <div className="schedule-box">
+        <p className="box-title">여행 일정</p>
+        <p>📅 {event.startDate} ~ {event.closeDate}</p>
+        <p>📍 {event.city}, {event.country}</p>
+      </div>
+
       {scrapMessage && <p>{scrapMessage}</p>}
+
+      <h3 className="section-title">작성자 정보</h3>
+      <div className="creator-info">
+        <div className="creator-avatar">👤</div>
+        <div>
+          <p className="creator-name">{event.creatorName}</p>
+          <p className="creator-meta">
+            {event.genderFilter === "MALE" ? "남자" : event.genderFilter === "FEMALE" ? "여자" : "성별 무관"}{" "}
+            <span className="style-filter">
+              {event.styleFilter === "COMMUNICATIVE" ? "소통" : event.styleFilter === "QUIET" ? "조용한" : "무관"}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <h3 className="section-title">상세 정보</h3>
+      <p className="category-info">🗂️ 카테고리: {event.categoryName}</p>
+      <p className="event-content">{event.content}</p>
 
       {!isCreator && (
         <div>
@@ -127,13 +145,14 @@ const EventDetail = () => {
             placeholder="신청 내용을 입력하세요"
             value={applicationContent}
             onChange={(e) => setApplicationContent(e.target.value)}
-            style={{ width: "100%", height: "80px" }}
+            className="application-textarea"
           />
-          <button onClick={handleApply}>신청하기</button>
+          <button onClick={handleApply} className="apply-button">신청하기</button>
         </div>
       )}
 
-      <hr />
+      <hr style={{ margin: "30px 0" }} />
+
       {isCreator && (
         <div>
           <h3>신청서 목록</h3>
@@ -142,13 +161,23 @@ const EventDetail = () => {
           ) : (
             <ul>
               {participations.map((p, index) => (
-                <li key={index}>
+                <li key={index} className="participation-item">
                   <p>🧑 신청자: {p.username}</p>
                   <p>📄 신청 내용: {p.content}</p>
-                  <p>📌 상태: {p.applicationStatus}</p>
-                  <button onClick={() => updateStatus("APPROVED", p.username)}>승인</button>
-                  <button onClick={() => updateStatus("REJECTED", p.username)}>거절</button>
-                  <hr />
+                  <p>📌 상태: {p.app === "APPROVED" ? "승인 완료" : p.app === "REJECTED" ? "거절됨" : "대기"}</p>
+
+                  <button
+                    onClick={() => updateStatus("APPROVED", p.username)}
+                    className="approve-button"
+                  >
+                    승인
+                  </button>
+                  <button
+                    onClick={() => updateStatus("REJECTED", p.username)}
+                    className="reject-button"
+                  >
+                    거절
+                  </button>
                 </li>
               ))}
             </ul>
