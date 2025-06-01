@@ -208,7 +208,7 @@ const EventDetail = () => {
                 <li key={index} className="participation-item">
                   <p>🧑 신청자: {p.username}</p>
                   <p>📄 신청 내용: {p.content}</p>
-                  <p>📌 상태: {p.app === "APPROVED" ? "승인 완료" : p.app === "REJECTED" ? "거절됨" : "대기"}</p>
+                  <p>📌 상태: {p.applicationStatus === "APPROVED" ? "승인 완료" : p.app === "REJECTED" ? "거절됨" : "대기"}</p>
 
                   <button
                     onClick={() => updateStatus("APPROVED", p.username)}

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,7 +8,8 @@ const Welcome = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const queryParams = new URLSearchParams(location.search);
+  // ⭐ useMemo 로 queryParams 고정
+  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const userName = queryParams.get("user_nm");
 
   useEffect(() => {
@@ -16,20 +17,13 @@ const Welcome = () => {
     if (token) {
       console.log("✅ Token 저장 (Welcome.jsx):", token);
       localStorage.setItem("Authorization", "Bearer " + token);
-
-      // 선택사항: URL 깔끔하게 (token 제거)
       window.history.replaceState({}, document.title, "/welcome");
     }
-  }, [location.search]); // location.search 가 바뀌면 다시 실행
-
+  }, [queryParams]); // 이제 eslint happy!
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:8080/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post("http://localhost:8080/logout", {}, { withCredentials: true });
       localStorage.removeItem("Authorization");
       console.log("✅ Token 삭제 (로그아웃)");
       toast.success("로그아웃 되었습니다 👋");
@@ -43,18 +37,11 @@ const Welcome = () => {
   };
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm(
-      "정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다."
-    );
+    const confirmDelete = window.confirm("정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
     if (!confirmDelete) return;
 
     try {
-      const response = await axios.delete(
-        "http://localhost:8080/api/user/delete",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete("http://localhost:8080/api/user/delete", { withCredentials: true });
 
       if (response.status === 200) {
         toast.success("탈퇴되었습니다. 😢");
@@ -73,15 +60,16 @@ const Welcome = () => {
   const goToMyPage = () => {
     navigate("/mypage");
   };
-  const createEvent = () =>{
+  const createEvent = () => {
     navigate("/event-create");
-  }
-  const getMyEvents = () =>{
+  };
+  const getMyEvents = () => {
     navigate("/get-myEvents");
-  }
-  const getAllEvents = () =>{
+  };
+  const getAllEvents = () => {
     navigate("/get_allEvents");
-  }
+  };
+
   return (
     <div>
       <h2>로그인 되신 것을 환영합니다, {userName}님!</h2>
@@ -92,12 +80,8 @@ const Welcome = () => {
       <button onClick={getMyEvents}>내 이벤트조회</button>
       <button onClick={getAllEvents}>모든 이벤트 조회</button>
       <button onClick={createEvent}>이벤트생성</button>
-    
-      <ToastContainer
-        position="top-center"
-        autoClose={1500}
-        hideProgressBar={false}
-      />
+
+      <ToastContainer position="top-center" autoClose={1500} hideProgressBar={false} />
     </div>
   );
 };
