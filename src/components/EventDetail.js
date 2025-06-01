@@ -10,6 +10,7 @@ const EventDetail = () => {
   const [scrapMessage, setScrapMessage] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [applicationContent, setApplicationContent] = useState("");
+  const [isScrapped, setIsScrapped] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,21 +34,41 @@ const EventDetail = () => {
       .catch((err) => console.error("신청서 조회 실패", err));
   }, [id]);
 
-  const handleScrap = () => {
+  useEffect(() => {
+  if (currentUser) {
     axios
-      .post("http://localhost:8080/api/scraps", null, {
+      .get("http://localhost:8080/api/scraps/is-scrapped", {
         params: { eventId: id },
         withCredentials: true,
       })
-      .then((res) => setScrapMessage(res.data))
+      .then((res) => {
+        setIsScrapped(res.data); 
+      })
       .catch((err) => {
-        if (err.response) {
-          setScrapMessage(err.response.data);
-        } else {
-          setScrapMessage("스크랩 중 오류가 발생했습니다.");
-        }
+        console.error("스크랩 상태 조회 실패", err);
       });
-  };
+  }
+}, [id, currentUser]);
+
+const handleScrap = () => {
+  axios
+    .post("http://localhost:8080/api/scraps", null, {
+      params: { eventId: id },
+      withCredentials: true,
+    })
+    .then((res) => {
+      setScrapMessage(res.data);
+
+      setIsScrapped((prev) => !prev);
+    })
+    .catch((err) => {
+      if (err.response) {
+        setScrapMessage(err.response.data);
+      } else {
+        setScrapMessage("스크랩 중 오류가 발생했습니다.");
+      }
+    });
+};
 
   const updateStatus = (status, username) => {
     axios
@@ -123,7 +144,13 @@ const EventDetail = () => {
       <h2 className="event-title">{event.title}</h2>
 
       <div className="event-header">
-        <button onClick={handleScrap} className="scrap-button" title="스크랩 하기">⭐</button>
+      <button
+        onClick={handleScrap}
+        className="scrap-button"
+        title="스크랩 하기"
+      >
+        {isScrapped ? "✪" : "✩"}
+      </button>
 
         <div className="event-meta">
           <div className="gender-filter">
@@ -204,25 +231,40 @@ const EventDetail = () => {
             <p>신청서가 없습니다.</p>
           ) : (
             <ul>
-              {participations.map((p, index) => (
-                <li key={index} className="participation-item">
-                  <p>🧑 신청자: {p.username}</p>
-                  <p>📄 신청 내용: {p.content}</p>
-                  <p>📌 상태: {p.app === "APPROVED" ? "승인 완료" : p.app === "REJECTED" ? "거절됨" : "대기"}</p>
+              {participations
+                .filter((p) => p.applicationStatus !== "REJECTED") // 거절된 신청서 제외
+                .map((p, index) => (
+                  <li key={index} className="participation-item">
+                    <p>🧑 신청자: {p.username}</p>
+                    <p>📄 신청 내용: {p.content}</p>
+                    <p>
+                      📌 상태:{" "}
+                      {p.applicationStatus === "APPROVED"
+                        ? "승인 완료"
+                        : p.applicationStatus === "REJECTED"
+                        ? "거절됨"
+                        : "대기"}
+                    </p>
 
-                  <button
-                    onClick={() => updateStatus("APPROVED", p.username)}
-                    className="approve-button"
-                  >
-                    승인
-                  </button>
-                  <button
-                    onClick={() => updateStatus("REJECTED", p.username)}
-                    className="reject-button"
-                  >
-                    거절
-                  </button>
-                </li>
+                    <button
+                      onClick={() => updateStatus("APPROVED", p.username)}
+                      className={`approve-button ${
+                        p.applicationStatus === "APPROVED" ? "disabled-button" : ""
+                      }`}
+                      disabled={p.applicationStatus === "APPROVED"}
+                    >
+                      승인
+                    </button>
+                    <button
+                      onClick={() => updateStatus("REJECTED", p.username)}
+                      className={`reject-button ${
+                        p.applicationStatus === "APPROVED" ? "disabled-button" : ""
+                      }`}
+                      disabled={p.applicationStatus === "APPROVED"}
+                    >
+                      거절
+                    </button>
+                  </li>
               ))}
             </ul>
           )}
