@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -11,6 +11,18 @@ const Welcome = () => {
   const queryParams = new URLSearchParams(location.search);
   const userName = queryParams.get("user_nm");
 
+  useEffect(() => {
+    const token = queryParams.get("token");
+    if (token) {
+      console.log("✅ Token 저장 (Welcome.jsx):", token);
+      localStorage.setItem("Authorization", "Bearer " + token);
+
+      // 선택사항: URL 깔끔하게 (token 제거)
+      window.history.replaceState({}, document.title, "/welcome");
+    }
+  }, [location.search]); // location.search 가 바뀌면 다시 실행
+
+
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -18,6 +30,8 @@ const Welcome = () => {
         {},
         { withCredentials: true }
       );
+      localStorage.removeItem("Authorization");
+      console.log("✅ Token 삭제 (로그아웃)");
       toast.success("로그아웃 되었습니다 👋");
       setTimeout(() => {
         navigate("/");
