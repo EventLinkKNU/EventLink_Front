@@ -91,7 +91,6 @@ const Mypage = () => {
           <button onClick={() => navigate("/get-myEvents")}>내 이벤트 관리</button>
           <button onClick={() => navigate("/myapplication")}>참여 신청 이벤트</button>
           <button onClick={() => navigate("/myscrap")}>스크랩</button>
-          <button onClick={() => navigate("/mycomplaint")}>신고 내역</button>
         </div>
 
         <div>
