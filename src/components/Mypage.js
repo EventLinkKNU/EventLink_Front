@@ -62,26 +62,6 @@ const Mypage = () => {
     }
   };
 
-  const handleDelete = async () => {
-    const confirmDelete = window.confirm("정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.");
-    if (!confirmDelete) return;
-
-    try {
-      const res = await axios.delete("http://localhost:8080/api/user/delete", {
-        withCredentials: true,
-      });
-
-      if (res.status === 200) {
-        toast.success("탈퇴되었습니다. 😢");
-        setTimeout(() => navigate("/login"), 1500);
-      } else {
-        toast.error("탈퇴 실패. 다시 시도해 주세요.");
-      }
-    } catch (error) {
-      console.error("탈퇴 실패:", error);
-      toast.error("탈퇴 실패. 다시 시도해 주세요.");
-    }
-  };
 
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -144,10 +124,8 @@ const Mypage = () => {
           )}
         </div>
 
-
         <div className="mypage-buttons bottom-buttons">
           <button className="logout-button" onClick={handleLogout}>로그아웃</button>
-          <button className="delete-button" onClick={handleDelete}>회원 탈퇴하기</button>
         </div>
       </div>
 
