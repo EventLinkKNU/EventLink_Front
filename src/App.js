@@ -38,9 +38,8 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/" element={<Login />} />
-
-            <Route path="/main" element={<Layout><Main /></Layout>} />
+            <Route path="/" element={<Layout><Login /></Layout>} />
+            <Route path="/main"  element={<Layout><Main /></Layout>} />
             <Route path="/welcome" element={<Layout><Welcome /></Layout>} />
             <Route path="/myscrap" element={<Layout><MyScrap /></Layout>} />
             <Route path="/mypage" element={<Layout><MyPage /></Layout>} />

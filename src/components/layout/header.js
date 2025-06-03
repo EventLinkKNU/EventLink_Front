@@ -65,6 +65,7 @@ const Header = () => {
     gap: "15px",
     fontSize: "20px",
     cursor: "pointer",
+    paddingRight: "20px",
   };
 
   const titleStyle = {
@@ -116,10 +117,17 @@ const Header = () => {
         )}
       </div>
       <div style={rightStyle}>
-        <Link to="/chat" style={{ textDecoration: 'none', color: 'inherit' }}>💬</Link>
-        <Link to="/mypage" style={{ textDecoration: 'none', color: 'inherit' }}>👤</Link>
-        <Link to="/notifications" style={{ textDecoration: 'none', color: 'inherit' }}>🔔</Link>
-      </div>
+      <Link to="/chat" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <img src="/images/chat.png" alt="Chat Icon" style={{ width: "24px", height: "24px" ,cursor:"pointer" }} />
+      </Link>
+      <Link to="/mypage" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <img src="/images/mypage.png" alt="Mypage Icon" style={{ width: "24px", height: "24px" ,cursor:"pointer" }} />
+      </Link>
+      <Link to="/notifications" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <img src="/images/notice.png" alt="Notice Icon" style={{ width: "24px", height: "24px",cursor:"pointer" }} />
+      </Link>
+    </div>
+
     </header>
   );
 };
