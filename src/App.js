@@ -53,8 +53,9 @@ function App() {
             <Route path="/get_allEvents" element={<Layout><AllEvents /></Layout>} />
             <Route path="/event-detail/:id" element={<Layout><EventDetail /></Layout>} />
             <Route path="/search" element={<Layout><SearchResult /></Layout>} />
-            <Route path="/search" element={<Layout><SearchPanel /></Layout>} />
-            <Route path="/chatroom/:chatId/:senderId/:receiverId" element={<Layout><ChatRoom /></Layout>} />
+            {/* <Route path="/search" element={<Layout><SearchPanel /></Layout>} /> */}
+            {/* <Route path="/chatroom/:chatId/:senderId/:receiverId/:roomId" element={<Layout><ChatRoom /></Layout>} /> */}
+            <Route path="/chat" element={<Layout><Chat /></Layout>} />
 
           </Routes>
         </div>

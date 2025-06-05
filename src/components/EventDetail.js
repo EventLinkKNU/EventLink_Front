@@ -127,7 +127,8 @@ const handleScrap = () => {
         console.log("채팅방 생성 성공:", chatRoom);
 
         // ✅ receiverId까지 포함해서 navigate!
-        navigate(`/chatroom/${chatRoom.chatId}/${currentUser.id}/${chatRoom.receiveId}`);
+        //:chatId/:senderId/:receiverId/:roomId
+        navigate(`/chatroom/${chatRoom.chatId}/${currentUser.id}/${chatRoom.receiveId}/${chatRoom.roomId}?receiverName=${event.creatorName}`);
       })
       .catch((err) => {
         console.error("채팅 생성 실패", err);
@@ -173,37 +174,46 @@ const handleScrap = () => {
       {scrapMessage && <p>{scrapMessage}</p>}
 
       <h3 className="section-title">작성자 정보</h3>
-      <div className="creator-info">
-        <div className="creator-avatar">👤</div>
-        <div>
-          <p className="creator-name">{event.creatorName}</p>
-          <p className="creator-meta">
-            {event.genderFilter === "MALE" ? "남자" : event.genderFilter === "FEMALE" ? "여자" : "성별 무관"}{" "}
-            <span className="style-filter">
-              {event.styleFilter === "COMMUNICATIVE" ? "소통" : event.styleFilter === "QUIET" ? "조용한" : "무관"}
-            </span>
-          </p>
-        </div>
-      </div>
+<div
+  className="creator-info"
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "10px"
+  }}
+>
+  <div style={{ display: "flex", alignItems: "center" }}>
+    <div className="creator-avatar" style={{ marginRight: "10px" }}>👤</div>
+    <div>
+      <p className="creator-name">{event.creatorName}</p>
+      <p className="creator-meta">
+        {event.genderFilter === "MALE" ? "남자" : event.genderFilter === "FEMALE" ? "여자" : "성별 무관"}{" "}
+        <span className="style-filter">
+          {event.styleFilter === "COMMUNICATIVE" ? "소통" : event.styleFilter === "QUIET" ? "조용한" : "무관"}
+        </span>
+      </p>
+    </div>
+  </div>
 
-      {/* ✅ 채팅하기 버튼 추가 */}
-      {!isCreator && event.creatorId && (
-        <button
-          onClick={handleChat}
-          className="chat-button"
-          style={{
-            marginTop: "10px",
-            padding: "8px 16px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
-          💬 채팅하기
-        </button>
-      )}
+  {!isCreator && event.creatorId && (
+    <button
+      onClick={handleChat}
+      className="chat-button"
+      style={{
+        padding: "8px 16px",
+        backgroundColor: "#4CAF50",
+        color: "white",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer"
+      }}
+    >
+      💬 채팅하기
+    </button>
+  )}
+</div>
+
 
       <h3 className="section-title">상세 정보</h3>
       <p className="category-info">🗂️ 카테고리: {event.categoryName}</p>
