@@ -21,18 +21,47 @@ import SearchPanel from "./components/SearchPanel";
 import MyApplicationEvent from "./components/MyApplicationEvent";
 import MyComplaint from "./components/MyComplaint";
 import ChatRoom from "./components/ChatRoom";
+import ChatRoomWrapper from "./components/ChatRoomWrapper";
+
 
 
 function App() {
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const token = urlParams.get("token");
 
-    if (token) {
-      console.log("✅ Token 저장 (App.js):", token);
-      localStorage.setItem("Authorization", "Bearer " + token);
+  //   if (token) {
+  //     console.log("✅ Token 저장 (App.js):", token);
+  //     localStorage.setItem("Authorization", "Bearer " + token);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    // 기존 URL 파라미터에서 token 저장 (이건 그대로 둬도 됨)
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get("token");
+  
+    if (tokenFromUrl) {
+      console.log("✅ Token 저장 (App.js - from URL):", tokenFromUrl);
+      localStorage.setItem("Authorization", "Bearer " + tokenFromUrl);
+      return;
+    }
+  
+    // ⭐️ 추가: 쿠키에서 Authorization 읽기
+    const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+      const [name, value] = cookie.split("=");
+      acc[name] = value;
+      return acc;
+    }, {});
+  
+    const tokenFromCookie = cookies["Authorization"];
+  
+    if (tokenFromCookie) {
+      console.log("✅ Token 저장 (App.js - from Cookie):", tokenFromCookie);
+      localStorage.setItem("Authorization", tokenFromCookie);
     }
   }, []);
+  
   return (
     <LoginProvider>
       <Router>
@@ -55,6 +84,8 @@ function App() {
             <Route path="/search" element={<Layout><SearchResult /></Layout>} />
             {/* <Route path="/search" element={<Layout><SearchPanel /></Layout>} /> */}
             {/* <Route path="/chatroom/:chatId/:senderId/:receiverId/:roomId" element={<Layout><ChatRoom /></Layout>} /> */}
+            <Route path="/chatroom/:chatId/:senderId/:receiverId/:roomId" element={<Layout><ChatRoomWrapper /></Layout>} />
+
             <Route path="/chat" element={<Layout><Chat /></Layout>} />
 
           </Routes>

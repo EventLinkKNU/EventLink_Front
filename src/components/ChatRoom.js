@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
-
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -10,6 +9,7 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
   useEffect(() => {
     const rawAuthorization = localStorage.getItem("Authorization");
     const token = rawAuthorization ? rawAuthorization.replace("Bearer ", "") : undefined;
+
 
     if (!token) {
       console.error("❌ Authorization 없음 (WebSocket 연결 안 함)");
@@ -21,23 +21,24 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
+        "Authorization": `Bearer ${token}`,
+      },
     })
-      .then(response => response.json())
-      .then(data => {
-        const formattedMessages = data.map(chat => ({
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedMessages = data.map((chat) => ({
           roomId: chat.roomId,
           chatId: chat.chatId,
           senderId: chat.sendID.id,
-          senderName: chat.sendID.name,
+          senderName: chat.sendID.id === parseInt(senderId) ? "나" : receiverName,
           receiverId: chat.receiveID.id,
           content: chat.message,
-          createdAt: chat.createdAt
+          createdAt: chat.createdAt,
         }));
         setMessages(formattedMessages);
+        console.log("✅ 기존 메시지 불러오기 성공:", formattedMessages);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("❌ 기존 메시지 불러오기 실패", err);
       });
 
@@ -54,7 +55,7 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
         receiveId: parseInt(receiverId),
         roomId: parseInt(roomId),
         message: "",
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
       socketRef.current.send(JSON.stringify(enterMessage));
     };
@@ -64,10 +65,10 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
       const formatted = {
         chatId: message.chatId || Date.now(),
         senderId: message.sendId,
-        senderName: message.sendName || "",
+        senderName: message.sendId === parseInt(senderId) ? "나" : receiverName,
         receiverId: message.receiveId,
         content: message.message,
-        createdAt: message.createdAt
+        createdAt: message.createdAt,
       };
       setMessages((prev) => [...prev, formatted]);
     };
@@ -77,7 +78,7 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
     };
 
     socketRef.current.onerror = (error) => {
-      console.error("WebSocket 에러:", error);
+      console.error("WebSocket 에러:", error, `token=${token}`, `roomId=${roomId}`);
     };
 
     return () => {
@@ -85,7 +86,7 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
         socketRef.current.close();
       }
     };
-  }, [chatId, senderId, receiverId, roomId]);
+  }, [chatId, senderId, receiverId, roomId, receiverName]);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -98,7 +99,7 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
         receiveId: parseInt(receiverId),
         roomId: parseInt(roomId),
         message: input,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
       socketRef.current.send(JSON.stringify(messageObj));
 
@@ -108,7 +109,7 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
         senderName: messageObj.sendId === parseInt(senderId) ? "나" : receiverName,
         receiverId: messageObj.receiveId,
         content: messageObj.message,
-        createdAt: messageObj.createdAt
+        createdAt: messageObj.createdAt,
       };
       setMessages((prev) => [...prev, formatted]);
 
@@ -122,37 +123,31 @@ const ChatRoom = ({ chatId, senderId, receiverId, roomId, receiverName }) => {
     <div className="flex flex-col h-full">
       {/* 채팅방 헤더 */}
       <div className="flex-1 overflow-y-auto p-6 space-y-3 bg-gray-100">
-  {messages.map((msg, idx) => (
-    <div
-    key={idx}
-    className="flex flex-row items-center justify-between px-4 py-2 border-b border-gray-200"
-  >
-    {/* 이름 */}
-    <div className="w-[100px] font-semibold text-gray-800">
-      {msg.senderId === parseInt(senderId) ? "나" : msg.senderName}
-    </div>
-  
-    {/* 내용 */}
-    <div className="flex-1 px-4 text-gray-900 break-words">
-      {msg.content}
-    </div>
-  
-    {/* 시간 */}
-    <div className="w-[80px] text-xs text-gray-500 text-right">
-      {new Date(msg.createdAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}
-    </div>
-  </div>
-  
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className="flex flex-row items-center justify-between px-4 py-2 border-b border-gray-200"
+          >
+            {/* 이름 */}
+            <div className="w-[100px] font-semibold text-gray-800">
+              {msg.senderName}
+            </div>
 
-  ))}
-</div>
+            {/* 내용 */}
+            <div className="flex-1 px-4 text-gray-900 break-words">
+              {msg.content}
+            </div>
 
-
-
-
+            {/* 시간 */}
+            <div className="w-[80px] text-xs text-gray-500 text-right">
+              {new Date(msg.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* 입력창 */}
       <div className="flex items-center p-4 bg-white border-t space-x-3">

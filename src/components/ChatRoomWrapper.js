@@ -7,6 +7,8 @@ const ChatRoomWrapper = () => {
   const queryParams = new URLSearchParams(location.search);
   const receiverName = queryParams.get("receiverName");
 
+  console.log("wrapper params:", { chatId, senderId, receiverId, roomId, receiverName });
+
   return (
     <ChatRoom
       chatId={parseInt(chatId)}
